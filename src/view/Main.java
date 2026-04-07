@@ -2,8 +2,8 @@ package view;
 import java.util.*;
 import dao.*;
 import service.*;
-public class Main {
 
+public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         AuthDAO auth = new AuthDAO();
@@ -16,15 +16,14 @@ public class Main {
             System.out.println("2. User Login");
             System.out.println("3. Exit");
 
+            System.out.print("Enter your choice: ");
             int choice = sc.nextInt();
 
             if (choice == 3) {
                 System.out.println("byeee");
                 break;
             }
-
             String roleSelected = "";
-
             if (choice == 1) roleSelected = "ADMIN";
             else if (choice == 2) roleSelected = "USER";
             else {
@@ -43,11 +42,13 @@ public class Main {
                 System.out.println("Invalid Login or Wrong Role Selected");
                 continue;
             }
+
             int loggedUserId = auth.getUserId(username);
             if (loggedUserId == -1 && role.equals("USER")) {
                 System.out.println("User ID not found");
                 continue;
             }
+
             System.out.println("Welcome " + role);
 
             if (role.equals("ADMIN")) {
@@ -61,6 +62,7 @@ public class Main {
                     System.out.println("6. Search Book");
                     System.out.println("7. Logout");
 
+                    System.out.print("Enter your choice: ");
                     int ch = sc.nextInt();
 
                     switch (ch) {
@@ -80,79 +82,103 @@ public class Main {
                             String p = sc.next();
                             admin.addUser(name, email, u, p);
                             break;
+
                         case 2:
                             admin.viewUsers();
                             break;
+
                         case 3:
                             sc.nextLine();
                             System.out.print("Title: ");
                             String title = sc.nextLine();
+
                             System.out.print("Author: ");
                             String author = sc.nextLine();
+
                             System.out.print("Quantity: ");
                             int qty = sc.nextInt();
+
                             admin.addBook(title, author, qty);
                             break;
+
                         case 4:
                             System.out.print("Book ID: ");
                             int id = sc.nextInt();
                             sc.nextLine();
+
                             System.out.print("New Title: ");
                             String newTitle = sc.nextLine();
+
                             System.out.print("New Author: ");
                             String newAuthor = sc.nextLine();
+
                             System.out.print("New Quantity: ");
                             int newQty = sc.nextInt();
+
                             bookDAO.updateBook(id, newTitle, newAuthor, newQty);
                             break;
+
                         case 5:
                             System.out.print("Book ID: ");
                             int delId = sc.nextInt();
                             bookDAO.deleteBook(delId);
                             break;
+
                         case 6:
                             sc.nextLine();
                             System.out.print("Search: ");
                             String key = sc.nextLine();
                             admin.search(key);
                             break;
+
                         case 7:
                             System.out.println("Admin Logged Out");
                             break;
+
                         default:
                             System.out.println("Invalid Choice");
                     }
+
                     if (ch == 7) break;
                 }
             }
+
             else if (role.equals("USER")) {
 
                 while (true) {
-                    System.out.println("\n WELCOME TO USER PANEL");
+                    System.out.println("\nWELCOME TO USER PANEL");
                     System.out.println("1. Issue Book");
                     System.out.println("2. Return Book");
                     System.out.println("3. Search Book");
                     System.out.println("4. Logout");
+
+                    System.out.print("Enter your choice: ");
                     int ch = sc.nextInt();
+
                     switch (ch) {
+
                         case 1:
                             bookDAO.showAllBooks();
                             System.out.print("Enter Book ID: ");
                             int bid = sc.nextInt();
                             user.issue(loggedUserId, bid);
                             break;
+
                         case 2:
                             user.returnBook(loggedUserId);
                             break;
+
                         case 3:
                             sc.nextLine();
                             System.out.print("Search: ");
                             String keyword = sc.nextLine();
                             bookDAO.search(keyword);
                             break;
+
                         case 4:
                             System.out.println("User Logged Out");
                             break;
+
                         default:
                             System.out.println("Invalid Choice");
                     }
