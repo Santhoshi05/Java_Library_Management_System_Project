@@ -4,20 +4,15 @@ public class BookDAO {
     public void addBook(String title, String author, int qty) {
         try {
             Connection con = DBConnection.getConnection();
-
             String sql = "INSERT INTO books(title, author, quantity) VALUES(?,?,?)";
             PreparedStatement ps = con.prepareStatement(sql);
-
             ps.setString(1, title);
             ps.setString(2, author);
             ps.setInt(3, qty);
-
             int rows = ps.executeUpdate();
-
             if (rows > 0) {
                 System.out.println("Book Added Successfully");
             }
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -43,7 +38,6 @@ public class BookDAO {
             if (rows > 0) {
                 System.out.println("Book Updated Successfully");
             }
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -61,15 +55,11 @@ public class BookDAO {
             }
             String sql = "DELETE FROM books WHERE book_id=?";
             PreparedStatement ps = con.prepareStatement(sql);
-
             ps.setInt(1, bookId);
-
             int rows = ps.executeUpdate();
-
             if (rows > 0) {
                 System.out.println("Book Deleted Successfully");
             }
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -92,17 +82,14 @@ public class BookDAO {
                     rs.getInt("quantity")
                 );
             }
-
             if (!found) {
                 System.out.println("No books found");
             }
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
     public void showAllBooks() {
-
         try {
             Connection con = DBConnection.getConnection();
             String sql = "SELECT * FROM books";
@@ -117,9 +104,36 @@ public class BookDAO {
                     rs.getInt("quantity")
                 );
             }
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+    public boolean isBookExists(int bookId) {
+        try {
+            Connection con = DBConnection.getConnection();
+            String sql = "SELECT 1 FROM books WHERE book_id=?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, bookId);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+    public boolean isBookAvailable(int bookId) {
+        try {
+            Connection con = DBConnection.getConnection();
+            String sql = "SELECT quantity FROM books WHERE book_id=?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, bookId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("quantity") > 0;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
     }
 }
