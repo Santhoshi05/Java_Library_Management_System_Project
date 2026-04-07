@@ -17,9 +17,6 @@ CREATE TABLE login (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
-INSERT INTO login (user_id, username, password, role) VALUES
-(1, 'admin', 'admin123', 'ADMIN');
-
 CREATE TABLE books (
     book_id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(100),
